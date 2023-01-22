@@ -1,3 +1,33 @@
 body{
     background-color: #e2e2e2!important;
 }
+
+/*HOME PAGE STYLE*/
+
+.banner-img{
+    width: 100%;
+    height: 89.6vh;
+    background: linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.8)),url("../img/home-image.jpg");
+    color: white;
+    background-size: cover;
+}
+
+
+
+/*ADDING EXPLICITLY CSS BECAUSE ml-auto NOT WORKING */
+.f-m{
+    margin-left: auto;
+}
+
+
+.nav-col{
+    background: linear-gradient(90deg, rgba(40,37,47,1) 27%, rgba(255,255,255,0) 49%, rgba(0,0,0,0.6195728291316527) 62%);
+}
+
+.foot {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
