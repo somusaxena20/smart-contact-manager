@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Document</title>
+<script src="https://kit.fontawesome.com/8d72d8c4bf.js"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+	<section style="margin-top: 4%; margin-bottom: 5%">
+
+		<div class="card">
+			<div class="card-body">
+				<h1 class="text-center">Add Contact</h1>
+				<div class="container-fluid mt-1">
+					<div class="row">
+						<div class="col-md-10 offset-md-1">
+							<form action="" th:object="${contact}"
+								enctype="multipart/form-data" method="POST"
+								th:action="@{/user/process-contact}" class="mt-2">
+								<div class="input-group">
+									<div class="input-group-prepend" style="width: 100%;">
+										<div class="input-group-text">
+											<input type="text" name="name" placeholder="Enter Name here"
+												class="form-control input-field">
+										</div>
+										<div class="input-group-text">
+											<input type="text" name="secondName"
+												placeholder="Enter Nickname here"
+												class="form-control input-field">
+										</div>
+										<div class="input-group-text">
+											<input type="text" name="phone"
+												placeholder="Enter Phone number here"
+												class="form-control input-field">
+										</div>
+										<div class="input-group-text">
+											<input type="email" name="email"
+												placeholder="Enter Email here"
+												class="form-control input-field">
+										</div>
+										<div class="input-group-text">
+											<input type="text" name="work" placeholder="Enter Work here"
+												class="form-control input-field">
+										</div>
+										<div class="input-group-text">
+											<textarea rows="30" cols="190"
+												placeholder="Enter Contact Description"
+												class="form-control input-field" name="desc"></textarea>
+										</div>
+
+										<div class="custom-file input-group-text">
+											<input type="file" name="profilepic" accept="image/jpeg, image/png, image/jpg" />
+										</div>
+										
+										<div class="container  text-center mt-2">
+											<button class="btn btn-outline-dark">Save Contact</button>
+										</div>
+
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
