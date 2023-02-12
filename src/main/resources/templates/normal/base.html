@@ -58,7 +58,7 @@
 
 	<div class="sidebar">
 		<a href="#"  th:href="@{/user/index}" class="items"><i class="fa-solid fa-house"></i>Home</a>
-		<a href="#" class="items">View Contacts</a>
+		<a href="#" th:href="@{/user/show-contacts}" class="items">View Contacts</a>
 		<a href="#" th:href="@{/user/add-contact}"  class="items">Add Contact</a>
 		<a href="#" th:href="@{/user/your-profile}"   class="items">Your Profile</a>
 		<a href="#" class="items">Settings</a>
@@ -66,6 +66,13 @@
 	</div>
 
 	<div class="content">
+	
+		<div class="container" th:if="${session.message}" style="z-index: 9999999; margin-top: 5%; font-weight: bolder; font-size: larger;">
+			<div th:classappend="${'alert-'+session.message.type}" class="alert text-center " role="alert">
+				<span th:text="${session.message.content}"></span>
+			</div>
+		</div>
+	
 		<div th:replace="${content}" class="inner-content"></div>
 	</div>
 

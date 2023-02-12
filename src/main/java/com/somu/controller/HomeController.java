@@ -1,5 +1,6 @@
 package com.somu.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.somu.entity.User;
+import com.somu.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
+	
+	@Autowired
+	private UserService service;
 
     @GetMapping("/")
     public String home(Model m)
@@ -38,7 +43,15 @@ public class HomeController {
     
     @PostMapping("/register")
 	public String register(@ModelAttribute("user") User u, Model m, HttpSession session) {
-		new UserController().userRegister(u,m);
+		
+    	u.setRole("ROLE_USER");
+		u.setEnabled(true);
+
+		User result = service.saveUser(u);
+
+		m.addAttribute("user", result);
+    	
+    	
 		return "signup";
 	}
     

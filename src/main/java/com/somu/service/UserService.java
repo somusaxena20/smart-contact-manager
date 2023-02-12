@@ -10,11 +10,11 @@ import com.somu.entity.User;
 public class UserService {
 	
 	@Autowired
-	private UserRepo repo;
+	private UserRepo userRepo;
 	
-	public User save(User u)
+	public User saveUser(User u)
 	{
-		repo.save(u);
+		userRepo.save(u);
 		return u;
 	}
 }

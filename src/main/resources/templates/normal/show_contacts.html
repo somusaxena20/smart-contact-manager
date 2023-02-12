@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::layout(~{::section})">
+<head>
+<meta charset="UTF-8">
+<title>Home Page</title>
+</head>
+<body>
+	<section style="margin-top: 4%; margin-bottom: 5%">
+
+		<div class="card" style="margin-right: 4%">
+			<div class="card-body">
+				<h1 class="text-center">Your Contacts</h1>
+
+				<table class="table table-dark table-striped">
+					<thead>
+						<tr>
+							<th scope="col">#ID</th>
+							<th scope="col">FIrst Name</th>
+							<th scope="col">Last Name</th>
+							<th scope="col">Email</th>
+							<th scope="col">Phone</th>
+							<th scope="col">Work</th>
+							<th scope="col">Picture</th>
+							<th scope="col">Options</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="c : ${contacts}">
+							<th scope="row" th:text="'SCM'+${c.cId}">1</th>
+							<td th:text="${c.name}">Mark</td>
+							<td th:text="${c.secondName}">Otto</td>
+							<td th:text="${c.email}">@mdo</td>
+							<td th:text="${c.phone}">@mdo</td>
+							<td th:text="${c.work}">@mdo</td>
+							<td th:text="${c.imgUrl}">@mdo</td>
+							<td >
+								<button class="btn btn-outline-info btn-sm">Update</button>
+								<button class="btn btn-outline-danger btn-sm">Delete</button>
+							</td>
+						</tr>	
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+
+	</section>
+</body>
+</html>
