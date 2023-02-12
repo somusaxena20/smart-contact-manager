@@ -1,7 +1,6 @@
 package com.somu.controller;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.somu.dao.ContactRepo;
 import com.somu.dao.UserRepo;
 import com.somu.entity.Contact;
 import com.somu.entity.User;
+import com.somu.helper.Message;
 import com.somu.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,9 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
+	
+	@Autowired
+	private ContactRepo contactRepo;
 
 	@Autowired
 	private UserRepo repo;
@@ -56,15 +61,6 @@ public class UserController {
 		System.out.println(u);
 		m.addAttribute("user", u);
 		return "normal/user_dashboard";
-	}
-
-	public void userRegister(User u, Model m) {
-		u.setRole("ROLE_USER");
-		u.setEnabled(true);
-
-		User result = service.save(u);
-
-		m.addAttribute("user", result);
 	}
 
 	@PostMapping("/validate")
@@ -161,7 +157,7 @@ public class UserController {
 				String imgName = u.getId()+""+ contact.getEmail()+""+new Date().getTime();
 				System.out.println(imgName);
 				
-				contact.setImgUrl(imgName);
+				
 				
 				String originalFilename = img.getOriginalFilename();
 				System.out.println("Original file name : "+originalFilename);
@@ -171,7 +167,8 @@ public class UserController {
 				File file = new ClassPathResource("static/img").getFile();
 				
 				String nameFIle = file.getAbsoluteFile()+File.separator+imgName+substring;
-				System.out.println(nameFIle);
+				System.out.println(imgName+substring);
+				contact.setImgUrl(imgName+substring);
 				Path path = Paths.get(nameFIle);
 				
 				Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
@@ -185,27 +182,36 @@ public class UserController {
 			System.out.println(u);
 			m.addAttribute("user", u);
 			m.addAttribute("contact", contact);
+			
+			session.setAttribute("message", new Message("Contact added!", "success"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			session.setAttribute("message", new Message("Something went wrong!", "danger"));
 			e.printStackTrace();
 		}
 		
-		return "/normal/user_dashboard";
+		return "/normal/add_contact";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@GetMapping("/show-contacts")
+	public String showContacts(HttpSession session, Model m)
+	{
+		if (session.getAttribute("email") == null) {
+			System.out.println("Please login...");
+			return "home";
+		}
+
+		System.out.println(session.getAttribute("email").toString());
+		User u = repo.getUserByEmail(session.getAttribute("email").toString());
+		System.out.println(u);
+		m.addAttribute("title", "Show Contacts");
+		m.addAttribute("user", u);
+		m.addAttribute("contact", new Contact());
+		
+		List<Contact> contacts = contactRepo.findContactsByUser(u.getId());
+		
+		m.addAttribute("contacts", contacts);
+		
+		return "normal/show_contacts";
+	}
 }

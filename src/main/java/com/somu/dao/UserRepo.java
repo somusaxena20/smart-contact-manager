@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.somu.entity.User;
 
-@Repository
+
 public interface UserRepo extends JpaRepository<User, Integer> {
+	
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	public User getUserByName(@Param("email")String email);
 	
