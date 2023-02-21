@@ -6,6 +6,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link rel="icon" type="image/x-icon" href="/img/smart-logo.png">
+
 <!-- Bootstrap CSS -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -58,20 +60,20 @@
 
 	<div class="sidebar">
 		<a href="#"  th:href="@{/user/index}" class="items"><i class="fa-solid fa-house"></i>Home</a>
-		<a href="#" th:href="@{/user/show-contacts}" class="items">View Contacts</a>
+		<a href="#" th:href="@{/user/show-contacts/0}" class="items">View Contacts</a>
 		<a href="#" th:href="@{/user/add-contact}"  class="items">Add Contact</a>
-		<a href="#" th:href="@{/user/your-profile}"   class="items">Your Profile</a>
+		<a href="#" th:href="@{/user/profile}"   class="items">Your Profile</a>
 		<a href="#" class="items">Settings</a>
 		<div class="divider"></div>
 	</div>
 
 	<div class="content">
 	
-		<div class="container" th:if="${session.message}" style="z-index: 9999999; margin-top: 5%; font-weight: bolder; font-size: larger;">
+		<!-- <div class="container" th:if="${session.message}" style="z-index: 9999999; margin-top: 5%; font-weight: bolder; font-size: larger;">
 			<div th:classappend="${'alert-'+session.message.type}" class="alert text-center " role="alert">
 				<span th:text="${session.message.content}"></span>
 			</div>
-		</div>
+		</div> -->
 	
 		<div th:replace="${content}" class="inner-content"></div>
 	</div>
@@ -102,6 +104,8 @@
 
 	<!--ADDING JAVASCRIPT-->
 
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 	<script th:src="@{/js/script.js}"></script>
 
 	<script
@@ -116,6 +120,31 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
 		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 		crossorigin="anonymous"></script>
+
+		<script>
+			function deleteContact(cId)
+			{
+				swal({
+					  title: "Are you sure?",
+					  text: "Once deleted, you will not be able to recover this imaginary file!",
+					  icon: "warning",
+					  buttons: true,
+					  dangerMode: true,
+					})
+					.then((willDelete) => {
+					  if (willDelete) {
+						  
+						  window.location="/user/delete/"+cId;
+						  
+					    swal("Poof! Your imaginary file has been deleted!", {
+					      icon: "success",
+					    });
+					  } else {
+					    swal("Your imaginary file is safe!");
+					  }
+					});
+			}
+		</script>
 
 </body>
 </html>

@@ -2,11 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="normal/base::layout(~{::section})">
 <head>
   <meta charset="UTF-8">
-  <title>About</title>
+  <title th:text="${}">About</title>
 </head>
 <body>
 <section style="margin-top: 4%; margin-bottom: 5%">
-  <h1>This is Private Dash Board page</h1>
+  	<div class="container">
+  		<div class="card">
+  			<div class="card-body">
+  				<img style="height: 200px; width: 200px;"
+						class="my_profile_picture" th:src="@{/img/contact-manager.png}" src=""
+						alt="profile-picture" />
+						
+					<span style="font-size: 60px; margin-left: 10%; ">SMART CONTACT MANAGER</span>	
+					
+					<a class="btn btn-outline-secondary btn-lg" th:href="@{/user/add-contact}">ADD YOUR CONTACT</a>
+					
+  			</div>
+  		</div>
+  	</div>
 </section>
 </body>
 </html>

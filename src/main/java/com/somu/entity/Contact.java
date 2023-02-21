@@ -24,7 +24,7 @@ public class Contact {
     private String secondName;
     @Column(name = "contact_work")
     private String work;
-    @Column(name = "contact_email")
+    @Column(name = "contact_email", unique = true)
     private String email;
     @Column(name = "contact_phone")
     private String phone;
@@ -34,4 +34,10 @@ public class Contact {
     private String desc;
     @ManyToOne
     private User user;
+    
+    @Override
+    public boolean equals(Object obj) {
+    	return this.cId == ((Contact)obj).getCId();
+    }
+    
 }
