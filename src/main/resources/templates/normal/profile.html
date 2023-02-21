@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::layout(~{::section})">
+<head>
+<meta charset="UTF-8">
+<title>About</title>
+</head>
+<body>
+	<section style="margin-top: 4%; margin-bottom: 5%">
+
+		<div class="container">
+			<div class="card">
+				<div class="card-body">
+					<img style="height: 200px; width: 200px;"
+						class="my_profile_picture" th:src="'/img/'+${user.imgUrl}" src=""
+						alt="profile-picture" /> 
+						<span style="float: right; font-size: 40px; font-weight: bolder; font-family:sans-serif;" class="text-center"
+						th:text="${user.name.toUpperCase()}"></span>
+					<table class="table table-dark table-striped mt-3 text-center">
+						<tbody>
+							<tr>
+								<th scope="col" style="padding: 20px;">#USER ID</th>
+								<th scope="col" style="padding: 20px;"><span
+									th:text="'SCM'+${user.id}"></span></th>
+							</tr>
+							<tr>
+								<th scope="row" style="padding: 20px;">Email</th>
+								<td style="padding: 20px;"><span th:text="${user.email}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row" style="padding: 20px;">Role</th>
+								<td style="padding: 20px;"><span th:text="${user.role}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row" style="padding: 20px;">Status</th>
+								<td style="padding: 20px;"><span
+									th:text="${user.enabled} ? 'ACTIVE' : 'DEACTIVE'"></span></td>
+							</tr>
+							<tr>
+								<th scope="row" style="padding: 20px;">About you</th>
+								<td style="padding: 20px;"><span th:text="${user.about}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

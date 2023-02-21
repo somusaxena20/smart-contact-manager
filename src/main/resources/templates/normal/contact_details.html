@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::layout(~{::section})">
+<head>
+<meta charset="UTF-8">
+<title>Home Page</title>
+</head>
+<body>
+	<section style="margin-top: 4%; margin-bottom: 5%">
+		<h1 class="text-center">Contact Details</h1>
+
+		<div class="card mr-3 ml-3">
+
+			<div class="card-body">
+				<div class="container ">
+					<img style="height: 200px; width: 200px" class="my_profile_picture"
+						src="" th:src="@{'/img/'+${pContact.imgUrl}}" alt="NOT FOUND">
+					<span style="font-size: 40px; font-weight: bolder; float: right;"
+						class="" th:text="${pContact.name+' '+pContact.secondName}"></span>
+
+					<table class="table table-dark table-striped mt-3 text-center">
+						<tbody>
+							<tr>
+								<th scope="col" style="padding: 20px;">#ID</th>
+								<th scope="col" style="padding: 20px;"><span th:text="'SCM'+${pContact.cId}"></span></th>
+							</tr>
+						
+							<tr>
+								<th scope="row" style="padding: 20px;">Email</th>
+								<td style="padding: 20px;"><span th:text="${pContact.email}"></span></td>
+							</tr>
+							
+							<tr>
+								<th scope="row" style="padding: 20px;">Phone</th>
+								<td style="padding: 20px;"><span th:text="${pContact.phone}"></span></td>
+							</tr>
+							
+							<tr>
+								<th scope="row" style="padding: 20px;">Work</th>
+								<td style="padding: 20px;"><span th:text="${pContact.work}"></span></td>
+							</tr>
+							
+						</tbody>
+					</table>
+
+					<div class="description mt-3">
+					
+						<th:block th:utext="${pContact.desc}" ></th:block>
+					
+					</div>
+					
+					<div class="container">
+						<a th:href="@{'/user/update/'+${pContact.cId}}" class="btn btn-outline-dark btn-sm">Update</a>
+						<a th:onclick="|deleteContact(${pContact.cId})|" class="btn btn-outline-danger btn-sm">Delete</a>	
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</section>
+</body>
+</html>

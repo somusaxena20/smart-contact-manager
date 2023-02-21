@@ -16,31 +16,48 @@
 					<thead>
 						<tr>
 							<th scope="col">#ID</th>
+							<th scope="col">Picture</th>
 							<th scope="col">FIrst Name</th>
 							<th scope="col">Last Name</th>
 							<th scope="col">Email</th>
 							<th scope="col">Phone</th>
 							<th scope="col">Work</th>
-							<th scope="col">Picture</th>
 							<th scope="col">Options</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="c : ${contacts}">
 							<th scope="row" th:text="'SCM'+${c.cId}">1</th>
+							<td class="img-data"><img  class="my_profile_picture" src="" th:src="@{'/img/'+${c.imgUrl}}" alt="NOT FOUND" ></td>
 							<td th:text="${c.name}">Mark</td>
 							<td th:text="${c.secondName}">Otto</td>
-							<td th:text="${c.email}">@mdo</td>
+							<td ><a href="" th:href="@{'/user/'+${c.cId}+'/contact'}"><span th:text="${c.email}"></span></a></td>
 							<td th:text="${c.phone}">@mdo</td>
 							<td th:text="${c.work}">@mdo</td>
-							<td th:text="${c.imgUrl}">@mdo</td>
-							<td >
-								<button class="btn btn-outline-info btn-sm">Update</button>
-								<button class="btn btn-outline-danger btn-sm">Delete</button>
+
+							<td>
+								<a th:href="@{'/user/update/'+${c.cId}}" class="btn btn-outline-info btn-sm">Update</a>
+								<a th:onclick="|deleteContact(${c.cId})|" class="btn btn-outline-danger btn-sm">Delete</a>
 							</td>
-						</tr>	
+						</tr>
 					</tbody>
 				</table>
+
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						<li th:if="${currentPage != 0}" class="page-item"><a
+							th:href="@{'/user/show-contacts/'+${currentPage - 1}}"
+							class="page-link" href="#">Previous</a></li>
+						<li th:classappend="${currentPage == i-1 ? 'active':''}"
+							th:each="i : ${#numbers.sequence(1, totalPages)}"
+							class="page-item"><a class="page-link" href="#"
+							th:href="@{'/user/show-contacts/'+${i-1}}"><span
+								th:text="${i}"></span></a></li>
+						<li th:if="${currentPage != totalPages+1}" class="page-item"><a
+							th:href="@{'/user/show-contacts/'+${currentPage + 1}}"
+							class="page-link" href="#">Next</a></li>
+					</ul>
+				</nav>
 
 			</div>
 		</div>

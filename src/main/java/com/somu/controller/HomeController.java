@@ -46,7 +46,7 @@ public class HomeController {
 		
     	u.setRole("ROLE_USER");
 		u.setEnabled(true);
-
+		u.setImgUrl("default-user.jpg");
 		User result = service.saveUser(u);
 
 		m.addAttribute("user", result);

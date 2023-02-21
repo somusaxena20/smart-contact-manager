@@ -37,6 +37,6 @@ public class User {
     private String imgUrl;
     @Column(name = "user_about")
     private String about;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contact> contacts;
 }
