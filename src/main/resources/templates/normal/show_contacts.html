@@ -11,6 +11,15 @@
 		<div class="card" style="margin-right: 4%">
 			<div class="card-body">
 				<h1 class="text-center">Your Contacts</h1>
+				
+				<div class="search-container my-4">
+					<input onkeyup="search()" id="search-input" class="form-control" placeholder="Search your contact" type="text" />
+					
+					<div class="search-result">
+						<h2>Search result</h2>
+					</div>
+					
+				</div>
 
 				<table class="table table-dark table-striped">
 					<thead>
