@@ -1,5 +1,7 @@
 package com.somu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +35,7 @@ public class Contact {
     @Column(name = "contact_desc",length = 1000)
     private String desc;
     @ManyToOne
+    @JsonIgnore
     private User user;
     
     @Override

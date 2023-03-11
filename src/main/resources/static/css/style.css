@@ -98,3 +98,19 @@ body{
 }
 
 
+/* search css */
+
+.search-container{
+	position: relative;
+}
+
+.search-result{
+	position: absolute;
+	width: 100%;
+	border: 1px solid gray;
+	border-radius : 1%;
+	background:white;
+	display: none;
+	padding: 1%;
+}
+
