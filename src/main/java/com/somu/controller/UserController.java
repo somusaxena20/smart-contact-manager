@@ -129,7 +129,7 @@ public class UserController {
 		System.out.println(session.getAttribute("email").toString());
 		User u = repo.getUserByEmail(session.getAttribute("email").toString());
 		System.out.println(u);
-		m.addAttribute("title","Add Contact");
+		m.addAttribute("title", "Add Contact");
 		m.addAttribute("user", u);
 		m.addAttribute("contact", new Contact());
 
@@ -257,7 +257,7 @@ public class UserController {
 		u.getContacts().remove(con);
 
 		repo.save(u);
-		
+
 		session.setAttribute("message", new Message("Contact Deleted!", "success"));
 
 		return "redirect:/user/show-contacts/0";
@@ -307,15 +307,15 @@ public class UserController {
 			if (img.isEmpty()) {
 				contact.setImgUrl(oldContact.getImgUrl());
 			} else {
-				
+
 				File file = new ClassPathResource("static/img").getFile();
 
 //				USING THIS DEFAULT PICTURE IS ALSO DELETED SO RESLOVE THIS LATER
 				File file1 = new File(file, oldContact.getImgUrl());
-				
-				if(!oldContact.getImgUrl().equals("default-user.jpg"))
+
+				if (!oldContact.getImgUrl().equals("default-user.jpg"))
 					file1.delete();
-				 
+
 //				UPDATE PROFILE PICTURE
 				String imgName = u.getId() + "" + contact.getEmail() + "" + new Date().getTime();
 				System.out.println(imgName);
@@ -324,8 +324,6 @@ public class UserController {
 				System.out.println("Original file name : " + originalFilename);
 				int lastIndexOf = originalFilename.lastIndexOf(".");
 				String substring = originalFilename.substring(lastIndexOf);
-
-				
 
 				String nameFIle = file.getAbsoluteFile() + File.separator + imgName + substring;
 				System.out.println(imgName + substring);
@@ -343,10 +341,9 @@ public class UserController {
 
 		return "redirect:/user/show-contacts/0";
 	}
-	
+
 	@GetMapping("/profile")
-	public String yourProfile(HttpSession session, Model m)
-	{
+	public String yourProfile(HttpSession session, Model m) {
 		if (session.getAttribute("email") == null) {
 			System.out.println("Please login...");
 			return "home";
@@ -358,11 +355,56 @@ public class UserController {
 		m.addAttribute("user", u);
 		m.addAttribute("title", "Profile Page");
 		m.addAttribute("contact", new Contact());
-		
+
 		return "normal/profile";
 	}
-	
-	
-	
 
+	@GetMapping("/settings")
+	public String changePassword(HttpSession session, Model m) {
+		System.out.println("Inside settings....");
+		if (session.getAttribute("email") == null) {
+			System.out.println("Please login...");
+			return "home";
+		}
+
+		System.out.println(session.getAttribute("email").toString());
+		User u = repo.getUserByEmail(session.getAttribute("email").toString());
+		System.out.println(u);
+		m.addAttribute("user", u);
+		m.addAttribute("title", "Profile Page");
+		m.addAttribute("contact", new Contact());
+		return "normal/settings";
+	}
+
+	@PostMapping("/change-password")
+	public String changePasswordHandler(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, HttpSession session, Model m) {
+		
+		System.out.println("OLD PASSWORD : "+oldPassword);
+		System.out.println("NEW PASSWORD : "+newPassword);
+		
+		if (session.getAttribute("email") == null) {
+			System.out.println("Please login...");
+			return "home";
+		}
+
+		System.out.println(session.getAttribute("email").toString());
+		User u = repo.getUserByEmail(session.getAttribute("email").toString());
+		System.out.println(u);
+		
+		String password = u.getPassword();
+		
+		if (password.equals(oldPassword)) {
+			System.out.println("Password matched...");
+			u.setPassword(newPassword);
+			this.repo.save(u);
+			session.setAttribute("messsage", new Message("Your Password Successfully Changed...", "alert-success"));
+		}
+		else {
+			System.out.println("Password did not matched");
+			session.setAttribute("messsage", new Message("Old Password Did not matched", "alert-error"));
+		}
+		
+		return "redirect:/user/index";
+	}
+	
 }
