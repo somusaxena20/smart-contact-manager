@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Sign up page</title>
+	<title th:title="${title}">Sign up page</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -38,6 +38,12 @@
 								<label for="exampleInputPassword1" class="form-label">Password</label>
 								<input name="password" placeholder="Enter here" type="password" class="form-control"
 									id="exampleInputPassword1" required>
+							</div>
+							
+							<div class="mb-3">
+								<label for="exampleInputEmail1" class="form-label">Contact Number</label>
+								<input name="number" th:value="${user.getNumber()}" placeholder="Enter here" type="text"
+									class="form-control" id="exampleInputNumber1" aria-describedby="numberHelp" required>
 							</div>
 
 							<div class="mb-3">

@@ -37,6 +37,8 @@ public class User {
     private String imgUrl;
     @Column(name = "user_about")
     private String about;
+    @Column(name = "user_contact", unique = true)
+    private String number;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contact> contacts;
 }
