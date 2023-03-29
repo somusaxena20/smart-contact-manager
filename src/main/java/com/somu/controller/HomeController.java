@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.somu.entity.User;
 import com.somu.service.UserService;
@@ -20,8 +19,12 @@ public class HomeController {
 	private UserService service;
 
     @GetMapping("/")
-    public String home(Model m)
+    public String home(Model m, HttpSession session)
     {
+    	if(session.getAttribute("email") != null) {
+			return "redirect:/user/index";
+		}
+    	
         m.addAttribute("title", "Smart Contact Manager");
         return "home";
     }

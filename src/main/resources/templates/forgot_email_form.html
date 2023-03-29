@@ -51,18 +51,26 @@ input[type="submit"] {
 <body>
 	<section>
 		<div class="container">
-			<form th:action="@{/user/validate}" method="POST">
-				<h1>Login</h1>
-				<input type="email" placeholder="Email" name="email"> 
-				<input type="password" placeholder="Password" name="password"> 
-				<input type="submit" value="Submit">
-			</form>
+			<div class="card">
+				<div class="card-body text-center m-3">
+					<div class="text-center">
+						<h1 class=m-3>Forgot Password</h1>
+					</div>
+
+					
+						<form action="" th:action="@{/send-otp}" method="POST">
+							<div class="form-group">
+								<input type="email" placeholder="Enter Your Registered Email"
+									class="form-control m-3" name="email" required />
+							</div>
+							
+							<button type="submit">Send OTP</button>
+							
+						</form>
+					
+				</div>
+			</div>
 		</div>
-		
-		<div class="container text-center">
-			<a href="" th:href="@{/forgot}">Forgot Password</a>
-		</div>
-		
 	</section>
 </body>
 </html>
