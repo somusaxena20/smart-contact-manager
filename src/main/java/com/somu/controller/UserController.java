@@ -11,24 +11,35 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
 import com.somu.dao.ContactRepo;
+import com.somu.dao.MyOrderRepo;
 import com.somu.dao.UserRepo;
 import com.somu.entity.Contact;
+import com.somu.entity.OrderDetails;
 import com.somu.entity.User;
 import com.somu.helper.Message;
 import com.somu.service.UserService;
@@ -38,6 +49,12 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+	
+	@Value("${razorpay.keyId}")
+	private String razorPayKeyId;
+	
+	@Value("${razorpay.secretKey}")
+	private String razorPaySecretId;
 
 	@Autowired
 	private UserService service;
@@ -47,6 +64,9 @@ public class UserController {
 
 	@Autowired
 	private UserRepo repo;
+	
+	@Autowired
+	private MyOrderRepo orderRepo;
 
 	@GetMapping("/index")
 	public String dashboard(HttpSession session, Model m) {
@@ -129,7 +149,7 @@ public class UserController {
 		System.out.println(session.getAttribute("email").toString());
 		User u = repo.getUserByEmail(session.getAttribute("email").toString());
 		System.out.println(u);
-		m.addAttribute("title", "Add Contact");
+		m.addAttribute("title","Add Contact");
 		m.addAttribute("user", u);
 		m.addAttribute("contact", new Contact());
 
@@ -257,7 +277,7 @@ public class UserController {
 		u.getContacts().remove(con);
 
 		repo.save(u);
-
+		
 		session.setAttribute("message", new Message("Contact Deleted!", "success"));
 
 		return "redirect:/user/show-contacts/0";
@@ -307,15 +327,15 @@ public class UserController {
 			if (img.isEmpty()) {
 				contact.setImgUrl(oldContact.getImgUrl());
 			} else {
-
+				
 				File file = new ClassPathResource("static/img").getFile();
 
 //				USING THIS DEFAULT PICTURE IS ALSO DELETED SO RESLOVE THIS LATER
 				File file1 = new File(file, oldContact.getImgUrl());
-
-				if (!oldContact.getImgUrl().equals("default-user.jpg"))
+				
+				if(!oldContact.getImgUrl().equals("default-user.jpg"))
 					file1.delete();
-
+				 
 //				UPDATE PROFILE PICTURE
 				String imgName = u.getId() + "" + contact.getEmail() + "" + new Date().getTime();
 				System.out.println(imgName);
@@ -324,6 +344,8 @@ public class UserController {
 				System.out.println("Original file name : " + originalFilename);
 				int lastIndexOf = originalFilename.lastIndexOf(".");
 				String substring = originalFilename.substring(lastIndexOf);
+
+				
 
 				String nameFIle = file.getAbsoluteFile() + File.separator + imgName + substring;
 				System.out.println(imgName + substring);
@@ -341,9 +363,10 @@ public class UserController {
 
 		return "redirect:/user/show-contacts/0";
 	}
-
+	
 	@GetMapping("/profile")
-	public String yourProfile(HttpSession session, Model m) {
+	public String yourProfile(HttpSession session, Model m)
+	{
 		if (session.getAttribute("email") == null) {
 			System.out.println("Please login...");
 			return "home";
@@ -355,56 +378,60 @@ public class UserController {
 		m.addAttribute("user", u);
 		m.addAttribute("title", "Profile Page");
 		m.addAttribute("contact", new Contact());
-
+		
 		return "normal/profile";
 	}
-
-	@GetMapping("/settings")
-	public String changePassword(HttpSession session, Model m) {
-		System.out.println("Inside settings....");
-		if (session.getAttribute("email") == null) {
-			System.out.println("Please login...");
-			return "home";
+	
+//	CREATINGORDER FOR PAYMENT GATEWAY
+	
+	@PostMapping("/create-order")
+	@ResponseBody
+	public String createOrder(@RequestBody Map<String, Object> data, HttpSession session) {
+		System.out.println("Order created.......");
+		Order create = null;
+		try {
+			int amount = Integer.parseInt(data.get("amount").toString());
+			
+			RazorpayClient razorpayClient = new RazorpayClient(razorPayKeyId, razorPaySecretId);
+			
+			JSONObject jsonObject = new JSONObject();
+			
+			jsonObject.put("amount", amount*100);//because we have to send that on paise so that's why we multiply with 100
+			jsonObject.put("currency", "INR");
+			jsonObject.put("receipt", "txn_12345");
+			
+			create = razorpayClient.orders.create(jsonObject);
+			
+			System.out.println(create);
+			
+//			SAVE ORDER IN DATABASE
+			
+			OrderDetails orderDetails = new OrderDetails();
+			
+			int amountPaid = create.get("amount");
+			orderDetails.setAmount(amountPaid/100+"");
+			orderDetails.setOrderId(create.get("id"));
+			orderDetails.setPaymentId("");
+			orderDetails.setStatus("Created");
+			orderDetails.setUser(this.repo.getUserByEmail(session.getAttribute("email").toString()));
+			orderDetails.setReceipt(create.get("receipt"));
+			
+			this.orderRepo.save(orderDetails);
 		}
-
-		System.out.println(session.getAttribute("email").toString());
-		User u = repo.getUserByEmail(session.getAttribute("email").toString());
-		System.out.println(u);
-		m.addAttribute("user", u);
-		m.addAttribute("title", "Profile Page");
-		m.addAttribute("contact", new Contact());
-		return "normal/settings";
-	}
-
-	@PostMapping("/change-password")
-	public String changePasswordHandler(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, HttpSession session, Model m) {
-		
-		System.out.println("OLD PASSWORD : "+oldPassword);
-		System.out.println("NEW PASSWORD : "+newPassword);
-		
-		if (session.getAttribute("email") == null) {
-			System.out.println("Please login...");
-			return "home";
+		catch(Exception e) {
+			e.printStackTrace();
 		}
-
-		System.out.println(session.getAttribute("email").toString());
-		User u = repo.getUserByEmail(session.getAttribute("email").toString());
-		System.out.println(u);
-		
-		String password = u.getPassword();
-		
-		if (password.equals(oldPassword)) {
-			System.out.println("Password matched...");
-			u.setPassword(newPassword);
-			this.repo.save(u);
-			session.setAttribute("messsage", new Message("Your Password Successfully Changed...", "alert-success"));
-		}
-		else {
-			System.out.println("Password did not matched");
-			session.setAttribute("messsage", new Message("Old Password Did not matched", "alert-error"));
-		}
-		
-		return "redirect:/user/index";
+		return create != null ? create.toString() : "{}";
 	}
 	
+	@PostMapping("/update-order")
+	public ResponseEntity<?> updateOrder(@RequestBody Map<String, Object> data){
+		OrderDetails order = this.orderRepo.findByOrderId(data.get("order_id").toString());
+		order.setPaymentId(data.get("payment_id").toString());
+		order.setStatus(data.get("paymentStatus").toString());
+		
+		this.orderRepo.save(order);
+		return new ResponseEntity<>(order, HttpStatus.OK);
+	}
+
 }

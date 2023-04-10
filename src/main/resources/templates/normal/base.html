@@ -14,7 +14,8 @@
 	rel="stylesheet"
 	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
 	crossorigin="anonymous">
-	<script src="https://kit.fontawesome.com/8d72d8c4bf.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/8d72d8c4bf.js"
+	crossorigin="anonymous"></script>
 
 <!--    HERE I'm USING MODEL ATTRIBUTE PASS BY HOME CONTROLLER-->
 <title th:text="${title}">Base Html</title>
@@ -26,7 +27,8 @@
 <body>
 
 	<!--    NAVBAR-->
-	<nav class="fixed-top navbar navbar-expand-lg navbar-dark nav-col text-uppercase">
+	<nav
+		class="fixed-top navbar navbar-expand-lg navbar-dark nav-col text-uppercase">
 		<div class="container-fluid">
 			<div>
 				<a class="navbar-brand" href="#" th:href="@{/}">Smart Contact
@@ -59,22 +61,23 @@
 
 
 	<div class="sidebar">
-		<a href="#"  th:href="@{/user/index}" class="items"><i class="fa-solid fa-house"></i>Home</a>
-		<a href="#" th:href="@{/user/show-contacts/0}" class="items">View Contacts</a>
-		<a href="#" th:href="@{/user/add-contact}"  class="items">Add Contact</a>
-		<a href="#" th:href="@{/user/profile}"   class="items">Your Profile</a>
-		<a href="#" th:href="@{/user/settings}"  class="items">Settings</a>
+		<a href="#" th:href="@{/user/index}" class="items"><i
+			class="fa-solid fa-house"></i>Home</a> <a href="#"
+			th:href="@{/user/show-contacts/0}" class="items">View Contacts</a> <a
+			href="#" th:href="@{/user/add-contact}" class="items">Add Contact</a>
+		<a href="#" th:href="@{/user/profile}" class="items">Your Profile</a>
+		<a href="#" class="items">Settings</a>
 		<div class="divider"></div>
 	</div>
 
 	<div class="content">
-	
+
 		<!-- <div class="container" th:if="${session.message}" style="z-index: 9999999; margin-top: 5%; font-weight: bolder; font-size: larger;">
 			<div th:classappend="${'alert-'+session.message.type}" class="alert text-center " role="alert">
 				<span th:text="${session.message.content}"></span>
 			</div>
 		</div> -->
-	
+
 		<div th:replace="${content}" class="inner-content"></div>
 	</div>
 
@@ -103,11 +106,13 @@
 
 
 	<!--ADDING JAVASCRIPT-->
-
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-	<script th:src="@{/js/script.js}"></script>
 	
+
+	<script th:src="@{/js/script.js}"></script>
+
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<script
@@ -123,7 +128,7 @@
 		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 		crossorigin="anonymous"></script>
 
-		<script>
+	<script>
 			function deleteContact(cId)
 			{
 				swal({
